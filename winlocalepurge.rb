@@ -2,6 +2,7 @@ require 'logger'
 require 'getoptlong'
 require 'fileutils'
 
+# TODO: put these settings in a configuration file
 Languages_to_keep = ["en", "en_GB", "en_US", "it_IT", "it", "english", "italian"]
 
 Possible_program_folders = ["Program Files", "Program Files (x86)", "PortableApps"]
@@ -209,7 +210,7 @@ opts.each do |opt,arg|
 	case opt
 		when '--help'
 			puts <<-EOF
-usage: __FILE__ [OPTION] ... DIR
+usage: #{__FILE__} [OPTION] ... DIR
 
 -h, --help:
    show help
