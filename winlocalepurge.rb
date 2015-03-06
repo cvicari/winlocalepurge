@@ -1,16 +1,18 @@
 require 'logger'
 require 'getoptlong'
 require 'fileutils'
+require 'yaml'
 
-# TODO: put these settings in a configuration file
-Languages_to_keep = ["en", "en_GB", "en_US", "it_IT", "it", "english", "italian"]
+# TODO UAT in windows 8
+# Languages_to_keep = ["en", "en_GB", "en_US", "it_IT", "it", "english", "italian"] # moved in configuration files
+# TODO each program could have a pattern to look for. For example, qBitTorrent is qt_<shortlang>.qm
 
 Possible_program_folders = ["Program Files", "Program Files (x86)", "PortableApps"]
 
 Known_programs = [
 	"BleachBit",
 	"Dia",
-	"GIMP",
+	"GIMP", "GIMP 2", # share/locale
 	"gPodder",
 	"7-Zip",
 	"Notepad++",
@@ -19,8 +21,8 @@ Known_programs = [
 	"SmartDefrag", # App/Language
 	"SystemExplorer",
 	"Spybot", # locale
-	"WiseDiskCleaner", # Languages
-	"WiseRegistryCleaner", # Languages
+	"WiseDiskCleaner", "Wise/Wise Disk Cleaner", # Languages
+	"WiseRegistryCleaner", "Wise/Wise Registry Cleaner", # Languages
 	"FileZilla FTP Client", "FileZilla", # locale
 	"Skype", # ...
 	"qBittorrent",
@@ -35,11 +37,20 @@ Known_programs = [
 	"Gnumeric",
 	"Pidgin",
 	"Opera",
+	"Bazaar", # locale
+	"EaseUS/EaseUS Partition Master 10.0", # locale (folders)
+	"TOSHIBA/System Setting", # Lang
+	"XBMC", # language
+	"Ditto", # Language
+	"qemu", # share/locale
+	"ReviverSoft/Start Menu Reviver/Languages", # Languages
+	# TODO google chrome C:\Program Files (x86)\Google\Chrome\Application\40.0.2214.115\Locales
+	# TODO ownCloud files all in the main folder
 ].sort
 
 Locale_folders = [
 	"locale", # VLC, BOINC, SyMenu, PortableApps.com, OperaPortable
-	"share/locale", # gnumeric, pidgin, gtk in general
+	"share/locale", # gnumeric, pidgin, gtk in general, Easeus partition master
 	"lang", #  foxit, but foxit has a folder named "Foxit Reader" with a space, in portableapps
 	"localization", # notepad++
 	"CdiResource/language", # CrystalDiskInfo
@@ -59,11 +70,17 @@ class LocaleCleaner
 	def initialize(driveRoot, logLevel)
 		@driveRoot = driveRoot
 		@log = Logger.new(STDOUT)
+		if (logLevel != Logger::DEBUG)
+			@log.formatter = proc do |severity, datetime, progname, msg|
+				"#{msg}\n"
+			end
+		end
 		@log.level = logLevel
 		@programFolder = nil
 	end
 
 	def cleanAll(dryRun=true)
+		@log.info "languages that will be kept: #{Languages_to_keep}"
 		scanForProgramFolders
 		toClean = scanForLocaleDirectories
 		cleanedFilesSize = 0
@@ -144,6 +161,8 @@ class LocaleCleaner
 							keep = false
 							(lang == "." || lang == "..") and next
 							Languages_to_keep.each do |lang_to_keep|
+								# matches = lang[/^#{lang_to_keep}/i] # TODO: could look at the beginning of the string, but qBittorrent
+									# keeps the language in the middle of the filename
 								matches = lang[/#{lang_to_keep}/i] # match case-insensitive
 								if matches != nil then
 									@log.debug "#{lang} can not be deleted"
@@ -241,6 +260,9 @@ EOF
 			end
 	end # case
 end # opts.each
+
+yamlProps = YAML.load_file("winlocalepurge.yaml")
+Languages_to_keep = yamlProps["Languages_to_keep"] or abort "Error: please specify Languages_to_keep in winlocalepurge.yaml file"
 
 rootFolder = ARGV.shift
 
