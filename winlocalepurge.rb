@@ -3,8 +3,7 @@ require 'getoptlong'
 require 'fileutils'
 require 'yaml'
 
-# TODO UAT in windows 8
-# Languages_to_keep = ["en", "en_GB", "en_US", "it_IT", "it", "english", "italian"] # moved in configuration files
+# TODO UAC in windows 8
 # TODO each program could have a pattern to look for. For example, qBitTorrent is qt_<shortlang>.qm
 
 Possible_program_folders = ["Program Files", "Program Files (x86)", "PortableApps"]
@@ -219,16 +218,7 @@ end
 dryRun = true
 logLevel = Logger::INFO
 
-# usare GetoptLong oppure 
-opts = GetoptLong.new(
-	[ '--help', '-h', GetoptLong::NO_ARGUMENT ],
-	[ '--really-delete', '-d', GetoptLong::NO_ARGUMENT ],
-	[ '--verbose', '-v', GetoptLong::REQUIRED_ARGUMENT ]
-)
-opts.each do |opt,arg|
-	case opt
-		when '--help'
-			puts <<-EOF
+HELP_MSG = <<-EOF
 usage: #{__FILE__} [OPTION] ... DIR
 
 -h, --help:
@@ -239,9 +229,18 @@ usage: #{__FILE__} [OPTION] ... DIR
 
 --verbose [level]:
 	the level of log verbosity, 0=WARN, 1=INFO, 2=DEBUG (default: 1)
-
-DIR: The directory in which to issue the greeting.
 EOF
+
+# usare GetoptLong oppure 
+opts = GetoptLong.new(
+	[ '--help', '-h', GetoptLong::NO_ARGUMENT ],
+	[ '--really-delete', '-d', GetoptLong::NO_ARGUMENT ],
+	[ '--verbose', '-v', GetoptLong::REQUIRED_ARGUMENT ]
+)
+opts.each do |opt,arg|
+	case opt
+		when '--help'
+			puts HELP_MSG
 	  exit
 		when '--really-delete'
 			dryRun = false
@@ -267,7 +266,7 @@ Languages_to_keep = yamlProps["Languages_to_keep"] or abort "Error: please speci
 rootFolder = ARGV.shift
 
 if rootFolder == nil
-	abort "please specify a root folder"
+	abort HELP_MSG
 end
 
 if rootFolder.include? "//" or rootFolder.include? "\\\\" or rootFolder.include? "\\/" or rootFolder.include? "/\\"
@@ -276,6 +275,10 @@ end
 
 if rootFolder.length > 1 && (rootFolder.end_with? "\\" or rootFolder.end_with? "/")
 	rootFolder = rootFolder.chop
+end
+
+if match = rootFolder.match(/([a-zA-Z])\:*/i)
+	rootFolder = "#{match.captures[0]}:/" 
 end
 
 if !(File.directory? rootFolder)
