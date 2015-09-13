@@ -50,7 +50,7 @@ Known_programs = [
 Locale_folders = [
 	"locale", # VLC, BOINC, SyMenu, PortableApps.com, OperaPortable
 	"share/locale", # gnumeric, pidgin, gtk in general, Easeus partition master
-	"lang", #  foxit, but foxit has a folder named "Foxit Reader" with a space, in portableapps
+	"lang", #  7zip, foxit, but foxit has a folder named "Foxit Reader" with a space, in portableapps
 	"localization", # notepad++
 	"CdiResource/language", # CrystalDiskInfo
 	"CdmResource/language", # CrystalDiskMark
