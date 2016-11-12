@@ -277,7 +277,7 @@ if rootFolder.length > 1 && (rootFolder.end_with? "\\" or rootFolder.end_with? "
 	rootFolder = rootFolder.chop
 end
 
-if match = rootFolder.match(/([a-zA-Z])\:*/i)
+if match = rootFolder.match(/^([a-zA-Z]):?$/i)
 	rootFolder = "#{match.captures[0]}:/" 
 end
 
