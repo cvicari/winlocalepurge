@@ -36,6 +36,7 @@ Known_programs = [
 	"Gnumeric",
 	"Pidgin",
 	"Opera",
+	"draw.io", # locales
 	"Bazaar", # locale
 	"EaseUS/EaseUS Partition Master 10.0", # locale (folders)
 	"TOSHIBA/System Setting", # Lang
@@ -43,8 +44,12 @@ Known_programs = [
 	"Ditto", # Language
 	"qemu", # share/locale
 	"ReviverSoft/Start Menu Reviver/Languages", # Languages
+	"MS VS Code", 	# TODO visual studio code C:\Users\claudio.vicari\Programmi\MS VS Code\locales
+	"Microsoft Azure Storage Explorer"
 	# TODO google chrome C:\Program Files (x86)\Google\Chrome\Application\40.0.2214.115\Locales
 	# TODO ownCloud files all in the main folder
+	# TODO azure storage explorer where in C:\Users\claudio.vicari\AppData\Local\Programs\Microsoft Azure Storage Explorer\locales
+	# TODO postman C:\Users\claudio.vicari\AppData\Local\Postman\app-8.3.0\locales\
 ].sort
 
 Locale_folders = [
@@ -57,7 +62,7 @@ Locale_folders = [
 	"res/lang", # PeaZip
 	"language", # SmartDefrag, XBMC, SystemExplorer
 	"languages", # WiseDiskCleaner, irfanview, pdfcreator, WiseRegistryCleaner
-	"locales", # Filezilla
+	"locales", # Filezilla, draw.io
 	"translations", # qBittorrent
 	"strings", # AbiWord
 ].sort
